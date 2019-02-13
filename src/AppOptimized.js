@@ -139,7 +139,7 @@ class App extends Component {
       const todosMapCopy = new Map(prevState.todos);
 
       let todoID = this._generateID();
-      todosMapCopy.set(todoID, {todo: this.state.inputValue, completed: false})
+      todosMapCopy.set(todoID, {todo: this.state.inputValue, completed: false, editing: false})
 
       return {
         todos: todosMapCopy
@@ -224,9 +224,56 @@ class App extends Component {
     }
   }
 
+  isEditMode = (e, id) => {
+    this.setState(prevState => {
+      const todosMapCopy = new Map(prevState.todos);
+      todosMapCopy.get(id).editing = true;
+
+      return {
+        todos: todosMapCopy
+      }
+    }, () => document.getElementById(id).focus()); // Move cursor to the end of input field when field is visible
+  }
+
+  _handleInputEditValue = (e, id) => {
+    const inputValue = e.target.value;
+    this.setState(prevState => {
+      const todosMapCopy = new Map(prevState.todos);
+      todosMapCopy.get(id).todo = inputValue;
+
+      return {
+        todos: todosMapCopy
+      }
+    })
+  }
+
+  _handleKeyDownInputEdit = (e, id) => {
+    if (e.key === 'Enter') {
+      this.setState(prevState => {
+        const todosMapCopy = new Map(prevState.todos);
+        todosMapCopy.get(id).editing = false;
+
+        return {
+          todos: todosMapCopy
+        }
+      });
+    }
+  }
+
+  _handleBlurInputEdit = (e, id) => {
+    this.setState(prevState => {
+      const todosMapCopy = new Map(prevState.todos);
+      todosMapCopy.get(id).editing = false;
+
+      return {
+        todos: todosMapCopy
+      }
+    });
+  }
+
   render() {
     const todosMap = this.state.todos;
-    const todosKeys = this.changeTodosView();
+    const todosIds = this.changeTodosView();
     const numCompletedTodos = this.getCompleted(this.state.todos).length;
     const numIncompleteTodos = todosMap.size - numCompletedTodos;
     const numIncompleteTodosStr = numIncompleteTodos === 1 ? `${numIncompleteTodos} item left` : `${numIncompleteTodos} items left`;
@@ -259,19 +306,31 @@ class App extends Component {
           {todosMap.size > 0 && (
             <div className="todos-list">
               <ul>
-                {todosKeys.map((todoKey, index) => {
+                {todosIds.map((id) => {
                   return(
-                    <li key={`${todosMap.get(todoKey).todo}-${index}`} className={todosMap.get(todoKey).completed ? 'completed' : ''}>
+                    <li
+                      key={id}
+                      className={todosMap.get(id).completed ? 'completed' : ''}
+                      onDoubleClick={(e) => this.isEditMode(e, id)}>
                       <div className="todo">
                         <input
                           className="checkbox"
                           type="checkbox"
-                          id={`${todosMap.get(todoKey).todo}-${index}`}
-                          checked={todosMap.get(todoKey).completed}
-                          onChange={(e) => this.handleCheckBoxChange(e, todoKey)}
+                          checked={todosMap.get(id).completed}
+                          onChange={(e) => this.handleCheckBoxChange(e, id)} />
+                        <label className={todosMap.get(id).editing ? 'todo-name hide' : 'todo-name visible'}>
+                          {todosMap.get(id).todo}
+                        </label>
+                        <input
+                          className={todosMap.get(id).editing ? 'edit on' : 'edit off'}
+                          type="text"
+                          id={id}
+                          value={todosMap.get(id).todo}
+                          onChange={(e) => this._handleInputEditValue(e, id)}
+                          onKeyPress={(e) => this._handleKeyDownInputEdit(e, id)}
+                          onBlur={(e) => this._handleBlurInputEdit(e, id)}
                         />
-                        <label htmlFor={`${todosMap.get(todoKey).todo}-${index}`}>{todosMap.get(todoKey).todo}</label>
-                        <div className="remove" onClick={() => this.deleteTodo(todoKey)}>x</div>
+                        <div className="remove" onClick={() => this.deleteTodo(id)}>x</div>
                       </div>
                     </li>
                   )
