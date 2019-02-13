@@ -107,9 +107,9 @@ class App extends Component {
   }
 
   /**
-   * Get an array of indices of completed todos
-   * @param  {[inputArr]} todos InputArray to reduce
-   * @return {[arr]}       Array of incides of completed todos
+   * Get an array of todoIDs of completed todos
+   * @param  {[inputArr]} todosMap todosMap to convert to array and reduce
+   * @return {[arr]}       Array of todoIDs of completed todos
    */
   getCompleted(todosMap) {
     const completedTodos = [...todosMap.entries()].reduce((arr, currTodo) => {
@@ -235,24 +235,23 @@ class App extends Component {
 
   changeTodosView() {
     const copyTodosMap = new Map(this.state.todos);
-    const copyTodosKeys = [...copyTodosMap.keys()];
-    const completedTodosIndices = this.getCompleted(this.state.todos);
+    const copyTodosIds = [...copyTodosMap.keys()];
 
     switch(this.state.nowShowing) {
       case 'all':
-        return copyTodosKeys;
+        return copyTodosIds;
       case 'active':
-        const activeTodosKeys = copyTodosKeys.filter(key => {
-          return !completedTodosIndices.includes(key);
-        });
-        return activeTodosKeys;
+        const activeTodosIds = copyTodosIds.filter(id =>
+          copyTodosMap.get(id).completed === false
+        );
+        return activeTodosIds;
       case 'completed':
-        const completedTodosKeys = copyTodosKeys.filter(key => {
-          return completedTodosIndices.includes(key);
-        });
-        return completedTodosKeys;
+        const completedTodosIds = copyTodosIds.filter(id =>
+          copyTodosMap.get(id).completed === true
+        );
+        return completedTodosIds;
       default:
-        return copyTodosKeys;
+        return copyTodosIds;
     }
   }
 
@@ -306,22 +305,6 @@ class App extends Component {
                     </li>
                   )
                 })}
-                {/* {todos.map((todoObj, index) => {
-                  return (
-                    <li key={`${todoObj.todo}-${index}`} className={todoObj.completed ? 'completed' : ''}>
-                      <div className="todo">
-                        <input
-                          className="checkbox"
-                          type="checkbox"
-                          id={`${todoObj.todo}-${index}`}
-                          checked={todoObj.completed}
-                          onChange={(e) => this.handleCheckBoxChange(e, index)} />
-                        <label htmlFor={`${todoObj.todo}-${index}`}>{todoObj.todo}</label>
-                        <div className="remove" onClick={() => this.deleteTodo(index)}>x</div>
-                      </div>
-                    </li>
-                  )}
-                )} */}
               </ul>
 
               {/* FOOTER */}
