@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Toggle from './Toggle.js';
 import './App.css';
 
 const keysToIgnore = ['inputValue'];
@@ -7,7 +8,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      toggleAll: false,
       todos: new Map(),
       inputValue: '',
       nowShowing: 'all',
@@ -74,27 +74,25 @@ class App extends Component {
 
 
   /**
-   * Toggle to select/de-select all todos
+   * Accepts a boolean to determine if all todos should be marked complete or not.
+   * @param  {Boolean} isToggleOn Boolean
+   * @return {[type]}             Updated todos that will be marked/unmarked completed
    */
-  // _handleToggleAll = () => {
-  //   this.setState(prevState => {
-  //     const newTodos = [...prevState.todos];
-  //     // toggleAll state is required because each todo can be toggled in different places:
-  //     //   toggleAll control, individual todo checkbox, create todo, delete todo, batch delete todo
-  //     newTodos.forEach((todo) => todo.completed = !prevState.toggleAll)
-  //
-  //     return {
-  //       toggleAll: !prevState.toggleAll,
-  //       todos: newTodos
-  //     }
-  //   });
-  // }
+  handleToggleAll = (isToggleAllOn) => {
+    this.setState(prevState => {
+      const todosMapCopy = new Map(prevState.todos);
+      todosMapCopy.forEach((todoObj) => todoObj.completed = isToggleAllOn)
+
+      return {
+        todos: todosMapCopy
+      }
+    });
+  }
 
   /**
-   * Check key down for specific key to //TODO: FINISH THIS DESCRIPTION
+   * Validate todo input field and create todo if valid.
    * @param  {[type]} e input key event
    */
-
   _handleKeyDown = (e) => {
     if (e.key === 'Enter' && this.state.inputValue.length > 0) {
       this.createTodo();
@@ -107,7 +105,7 @@ class App extends Component {
   }
 
   /**
-   * Get an array of todoIDs of completed todos
+   * Get an array of todoIDs of completed todos.
    * @param  {[inputArr]} todosMap todosMap to convert to array and reduce
    * @return {[arr]}       Array of todoIDs of completed todos
    */
@@ -121,11 +119,11 @@ class App extends Component {
   }
 
   /**
-   * generate random ID for Todo object
-   * @return {[type]} [description]
+   * Generate random ID for Todo object.
+   * @return {[str]} String of alphanumeric characters
    */
-  _generateID(str) {
-    return str + Math.random().toString(36).substring(2);
+  _generateID() {
+    return Math.random().toString(36).substring(2);
   }
 
   // TODO: WORK ON VERIFYING RANDOM ID DOES NOT EXIST IN MAP
@@ -134,26 +132,24 @@ class App extends Component {
   }
 
   /**
-   * Create a new todo and invoke updateToggleAllState callback
+   * Create a new todo.
    */
   createTodo() {
     this.setState(prevState => {
-      const mapCopy = new Map(this.state.todos);
+      const todosMapCopy = new Map(prevState.todos);
 
-      let todoID = this._generateID(this.state.inputValue);
-      mapCopy.set(todoID, {todo: this.state.inputValue, completed: false})
+      let todoID = this._generateID();
+      todosMapCopy.set(todoID, {todo: this.state.inputValue, completed: false})
 
       return {
-        todos: mapCopy
+        todos: todosMapCopy
       }
-    }
-    // , () => this.updateToggleAllState(this.state.todos)
-    );
+    });
   }
 
   /**
-   * Delete a todo and invoke updateToggleAllState callback
-   * @param  {[type]} id ID of todo to remove from todos
+   * Delete a todo.
+   * @param  {[str]} id ID of todo to remove from todos
    */
   deleteTodo = (id) => {
     this.setState(prevState => {
@@ -163,15 +159,13 @@ class App extends Component {
       return {
         todos: todosCopy
       }
-    }
-    // , () => this.updateToggleAllState(this.state.todos)
-    );
+    });
   }
 
   /**
-   * Update a todo's completed state and invoke updateToggleAllState callback
+   * Update a todo's completed state.
    * @param  {[type]} e     Check/uncheck checkbox
-   * @param  {[type]} index Index of item checked
+   * @param  {[type]} id    ID of checked todo
    */
   handleCheckBoxChange = (e, id) => {
     const isTargetChecked = e.target.checked;
@@ -182,13 +176,11 @@ class App extends Component {
       return {
         todos: newTodos
       }
-    }
-    // , () => this.updateToggleAllState(this.state.todos)
-    );
+    });
   }
 
   /**
-   * Batch delete completed todos and invoke updateToggleAllState callback
+   * Batch delete completed todos.
    * @return {[type]} todos state with remaining incomplete todos
    */
   clearCompleted = () => {
@@ -202,31 +194,8 @@ class App extends Component {
       return {
         todos: todosMapCopy
       }
-    }
-    // , () => this.updateToggleAllState(this.state.todos)
-    );
+    });
   }
-
-  /**
-   * Updating toggleAll state is required during the following actions:
-   *   - create a todo: Example case when a check is performed is when all todos are marked completed and
-   *       a new todo is added -> toggleAll to false.
-   *   - delete a todo: Example case when a check is performed is when the remaining todos are marked completed and
-   *       deleted todo was incomplete -> toggleAll to true.
-   *   - batch delete todos: Example case when a check is performed is when all todos are marked completed and
-   *       then cleared -> toggleAll to false.
-   *   - toggle individual todo: Example case when a check is performed is when there's one todo and it has been marked
-   *       completed -> toggleAll to true.
-   *
-   * @param  {[type]} todos Map of current todos
-   * @return {[type]}       toggleAll state is set to true or false
-   */
-  // updateToggleAllState = (todos) => {
-  //   const numCompletedTodos = this.getCompleted(todos).length;
-  //   const totalTodos = todos.size;
-  //
-  //   return numCompletedTodos === totalTodos && totalTodos > 0 ? this.setState({toggleAll: true}) : this.setState({toggleAll: false});
-  // }
 
   _handleFilterSelection = (e) => {
     const selectedFilter = e.target.dataset.filter;
@@ -259,8 +228,8 @@ class App extends Component {
     const todosMap = this.state.todos;
     const todosKeys = this.changeTodosView();
     const numCompletedTodos = this.getCompleted(this.state.todos).length;
-    // const numIncompleteTodos = this.state.todos.size - numCompletedTodos;
-    // const numIncompleteTodosStr = numIncompleteTodos === 1 ? `${numIncompleteTodos} item left` : `${numIncompleteTodos} items left`;
+    const numIncompleteTodos = todosMap.size - numCompletedTodos;
+    const numIncompleteTodosStr = numIncompleteTodos === 1 ? `${numIncompleteTodos} item left` : `${numIncompleteTodos} items left`;
     const filterSelected = (filter) => {
       return this.state.nowShowing === filter ? 'filter selected' : 'filter'
     }
@@ -272,9 +241,11 @@ class App extends Component {
         <div className="todos-container">
           {/* INPUT FIELD */}
           <div className="wrapper-input-field">
-            {/* {this.state.todos.size > 0 && (
-              <span className={this.state.toggleAll ? 'toggle-all-icon selected' : 'toggle-all-icon'} onClick={this._handleToggleAll}></span>
-            )} */}
+            <Toggle
+              onClick={this.handleToggleAll}
+              totalTodos={todosMap.size}
+              totalCompletedTodos={numCompletedTodos}
+            />
             <input
               className="input-field"
               type="text"
@@ -309,7 +280,7 @@ class App extends Component {
 
               {/* FOOTER */}
               <div className="footer">
-                {/* <span className="count">{numIncompleteTodosStr}</span> */}
+                <span className="count">{numIncompleteTodosStr}</span>
                 <div className="filters-wrapper">
                   <ul className="filters">
                     <li
