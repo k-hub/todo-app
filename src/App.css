@@ -109,7 +109,7 @@ ul {
     color: #af5b5e;
 }
 
-li.completed label {
+.todo.completed label {
     text-decoration: line-through;
     color: #d9d9d9;
     transition: color 0.4s;
@@ -173,31 +173,34 @@ li.completed label {
     border: none;
 }
 
-input.edit {
+input.edit-field {
     box-sizing: border-box;
-}
-
-.edit.off {
-    display: none;
-}
-
-.edit.on {
-    display: inline-block;
-}
-
-.edit {
     width: 100%;
     height: 100%;
 }
 
-.todo-name {
-    width: 100%;
-}
-
-.todo-name.hide {
+.todo.edit-off .edit-field {
     display: none;
 }
 
-.todo-name.visible {
+.todo.edit-on .edit-field {
     display: inline-block;
+}
+
+.todo.edit-on .remove {
+    display: none;
+}
+
+.todo-name {
+    width: 100%;
+    height: 100%;
+}
+
+.todo.edit-on .todo-name {
+    display: none;
+}
+
+.todo.edit-off .todo-name {
+    display: flex;
+    align-items: center;
 }

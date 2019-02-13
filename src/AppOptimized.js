@@ -308,21 +308,23 @@ class App extends Component {
               <ul>
                 {todosIds.map((id) => {
                   return(
-                    <li
-                      key={id}
-                      className={todosMap.get(id).completed ? 'completed' : ''}
-                      onDoubleClick={(e) => this.isEditMode(e, id)}>
-                      <div className="todo">
+                    <li key={id}>
+                      <div className={
+                        `todo
+                        ${todosMap.get(id).completed ? 'completed' : ''}
+                        ${todosMap.get(id).editing ? 'edit-on' : 'edit-off'}`}>
                         <input
                           className="checkbox"
                           type="checkbox"
                           checked={todosMap.get(id).completed}
                           onChange={(e) => this.handleCheckBoxChange(e, id)} />
-                        <label className={todosMap.get(id).editing ? 'todo-name hide' : 'todo-name visible'}>
+                        <label
+                          className="todo-name"
+                          onDoubleClick={(e) => this.isEditMode(e, id)}>
                           {todosMap.get(id).todo}
                         </label>
                         <input
-                          className={todosMap.get(id).editing ? 'edit on' : 'edit off'}
+                          className="edit-field"
                           type="text"
                           id={id}
                           value={todosMap.get(id).todo}
