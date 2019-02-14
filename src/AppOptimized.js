@@ -310,14 +310,14 @@ class App extends Component {
                   return(
                     <li key={id}>
                       <div className={
-                        `todo
-                        ${todosMap.get(id).completed ? 'completed' : ''}
-                        ${todosMap.get(id).editing ? 'edit-on' : 'edit-off'}`}>
-                        <input
-                          className="checkbox"
-                          type="checkbox"
-                          checked={todosMap.get(id).completed}
-                          onChange={(e) => this.handleCheckBoxChange(e, id)} />
+                        `todo ${todosMap.get(id).completed ? 'completed' : ''} ${todosMap.get(id).editing ? 'edit-on' : 'edit-off'}`}>
+                        <div className="todo-checkbox-wrapper">
+                          <input
+                            className="checkbox"
+                            type="checkbox"
+                            checked={todosMap.get(id).completed}
+                            onChange={(e) => this.handleCheckBoxChange(e, id)} />
+                        </div>
                         <label
                           className="todo-name"
                           onDoubleClick={(e) => this.isEditMode(e, id)}>
