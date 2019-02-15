@@ -282,9 +282,9 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <div className="todos-wrapper">
+      <div className="app">
         <header>todos</header>
+        <div className="todos-wrapper">
         <div className="todos-container">
           {/* INPUT FIELD */}
           <div className="wrapper-input-field">

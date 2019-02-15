@@ -1,5 +1,8 @@
 body {
     background-color: #f6f6f6;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    color: #4d4d4d;
 }
 
 header {
@@ -9,10 +12,22 @@ header {
     color: rgba(175, 47, 47, 0.15);
 }
 
+.app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .todos-wrapper {
+    width: 550px;
+    min-width: 230px;
+    max-width: 100vw;
     display: flex;
     align-items: center;
     flex-direction: column;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+    margin: 17px 0 40px 0;
 }
 
 .wrapper-input-field {
@@ -20,20 +35,27 @@ header {
 }
 
 .input-field {
-    height: 60px;
     width: 100%;
-    padding-left: 55px;
+    padding: 16px 16px 16px 55px;
     border: none;
+    box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
 }
 
 input {
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 100;
     box-sizing: border-box;
 }
 
 input:focus {
     outline: none;
+}
+
+.input-field::placeholder {
+    font-style: italic;
+    font-size: 24px;
+    color: #e7e6e6;
+    font-weight: 200;
 }
 
 .toggle-all-icon::before {
@@ -44,9 +66,9 @@ input:focus {
     font-family: "Font Awesome 5 Free";
     font-weight: 600;
     content: "\f107";
-    font-size: 30px;
+    font-size: 24px;
     color: #e6e6e6;
-    padding: 15px;
+    padding: 19px;
 }
 
 .toggle-all-icon.selected::before {
@@ -62,20 +84,13 @@ input:focus {
     height: 30px;
 }
 
-.input-field::placeholder {
-    font-style: italic;
-    font-size: 30px;
-    color: #e7e6e6;
-}
-
 .todos-container {
-    width: 656px;
+    width: 100%;
     box-shadow: 0px 1px 5px -2px;
 }
 
 .todos-list {
-    font-size: 30px;
-    font-weight: 100;
+    font-size: 24px;
     background: #fff;
 }
 
@@ -88,15 +103,12 @@ ul {
 .todo {
     display: flex;
     position: relative;
-    align-items: center;
-    height: 60px;
     width: 100%;
     border-top: 1px solid #e6e6e6;
 }
 
 .todo-checkbox-wrapper {
     position: relative;
-    height: 100%;
     width: 60px;
 }
 
@@ -155,8 +167,8 @@ ul {
 .todo:hover .remove {
     display:inline-block;
     position: absolute;
-    right: 0;
-    margin: 0 20px;
+    bottom: 11px;
+    right: 14px;
     color: #af5b5e;
 }
 
@@ -167,21 +179,42 @@ ul {
 }
 
 .footer {
-    display: flex;
-    height: 40px;
-    padding: 0 15px;
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
+    min-height: 20px;
+    padding: 10px 15px;
     background-color: #fff;
     font-size: 14px;
-    color: #aaaaaa;
-    box-shadow: 0 8px 0px -3px #fff, 0 8px 2px -3px, 0 15px 0 -5px #fff, 0 15px 2px -3px;
+    color: #777;
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.2),
+        0 8px 0 -3px #f6f6f6,
+        0 9px 1px -3px rgba(0, 0, 0, 0.2),
+        0 16px 0 -6px #f6f6f6,
+        0 17px 2px -6px rgba(0, 0, 0, 0.2);
     border-top: 1px solid #e6e6e6;
-    border-bottom: 1px solid #e6e6e6;
+}
+
+.count, .clear-completed {
+    white-space: nowrap;
+}
+
+.count {
+    float: left;
+}
+
+.clear-completed {
+    float: right;
 }
 
 .filters-wrapper {
-    width: 200px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    max-width: 200px;
+    height: 30px;
 }
 
 .filters {
@@ -219,14 +252,18 @@ ul {
 }
 
 .clear-completed {
-    color: #aaaaaa;
+    color: #777;
     font-size: 100%;
+    font-weight: 300;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     border: none;
+    outline: none;
 }
 
 input.edit-field {
     width: 100%;
     height: 100%;
+    min-height: 60px;
 }
 
 .todo.edit-off .edit-field {
@@ -244,6 +281,8 @@ input.edit-field {
 .todo-name {
     width: 100%;
     height: 100%;
+    padding: 12px 12px 12px 0;
+    word-break: break-all;
 }
 
 .todo.edit-on .todo-name {
@@ -251,6 +290,15 @@ input.edit-field {
 }
 
 .todo.edit-off .todo-name {
-    display: flex;
-    align-items: center;
+    display: inline-block;
+}
+
+@media only screen and (max-width: 480px) {
+    .footer {
+        height: 50px;
+    }
+    .filters-wrapper {
+        top: inherit;
+        bottom: 10px;
+    }
 }
