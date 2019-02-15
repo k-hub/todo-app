@@ -4,6 +4,30 @@ import './App.css';
 
 const keysToIgnore = ['inputValue'];
 
+function strMapToObj(strMap) {
+    let obj = Object.create(null);
+    for (let [k,v] of strMap) {
+        obj[k] = v;
+    }
+    return obj;
+}
+
+function objToStrMap(obj) {
+    let strMap = new Map();
+    for (let k of Object.keys(obj)) {
+        strMap.set(k, obj[k]);
+    }
+    return strMap;
+}
+
+function strMapToJson(strMap) {
+  return JSON.stringify(strMapToObj(strMap));
+}
+
+function jsonToStrMap(jsonStr) {
+    return objToStrMap(JSON.parse(jsonStr));
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -21,24 +45,35 @@ class App extends Component {
     for (let key in this.state) {
       if (sessionStorage.hasOwnProperty(key)) {
         let value = sessionStorage.getItem(key);
-        value = JSON.parse(value);
+
+        if (key === 'todos') {
+          value = jsonToStrMap(value);
+        } else {
+          value = JSON.parse(value);
+        }
+
         this.setState({ [key]: value });
       }
     }
   }
+  
   /**
    * Save current state to sessionStorage.
    */
   saveStateToSessionStorage() {
     for (let key in this.state) {
       if (!keysToIgnore.includes(key)) {
-        sessionStorage.setItem(key, JSON.stringify(this.state[key]));
+        if (key === 'todos') {
+          sessionStorage.setItem(key, strMapToJson(this.state[key]));
+        } else {
+          sessionStorage.setItem(key, JSON.stringify(this.state[key]));
+        }
       }
     }
   }
 
   componentDidMount() {
-     // this.hydrateState();
+     this.hydrateState(); // Initialize state from sessionStorage
 
      window.addEventListener(
        'beforeunload',
