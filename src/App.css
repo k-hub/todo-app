@@ -6,10 +6,30 @@ body {
 }
 
 header {
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 100px;
     font-weight: 100;
     color: rgba(175, 47, 47, 0.15);
+}
+
+input {
+    font-size: 24px;
+    font-weight: 300;
+    box-sizing: border-box;
+    color: #4d4d4d;
+}
+
+input:focus {
+    outline: none;
+}
+
+input, button {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .app {
@@ -36,19 +56,9 @@ header {
 
 .input-field {
     width: 100%;
-    padding: 16px 16px 16px 55px;
+    padding: 16px 16px 16px 60px;
     border: none;
     box-shadow: inset 0 -2px 1px rgba(0,0,0,0.03);
-}
-
-input {
-    font-size: 24px;
-    font-weight: 100;
-    box-sizing: border-box;
-}
-
-input:focus {
-    outline: none;
 }
 
 .input-field::placeholder {
@@ -75,7 +85,6 @@ input:focus {
     color: #6a6969;
 }
 
-
 .toggle-all-icon {
     position: absolute;
     top: 0;
@@ -94,12 +103,6 @@ input:focus {
     background: #fff;
 }
 
-ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
 .todo {
     display: flex;
     position: relative;
@@ -109,21 +112,20 @@ ul {
 
 .todo-checkbox-wrapper {
     position: relative;
-    width: 60px;
+    width: 35px;
+    margin: 0 5px 0 10px;
 }
 
 .todo-checkbox-wrapper::before {
     content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
     height: 30px;
     width: 30px;
+    margin: auto 0px;
     border: 1px solid #e6e6e6;
     border-radius: 50%;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
+    box-sizing: border-box;
 }
 
 .todo.completed .todo-checkbox-wrapper::before {
@@ -132,17 +134,15 @@ ul {
 
 .todo-checkbox-wrapper::after {
     content: '';
-    height: 20px;
-    width: 20px;
-    opacity: 0;
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    height: 30px;
+    width: 30px;
+    margin: auto 0;
     background-image: url('./checked.svg');
     background-repeat: no-repeat;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    margin: auto;
+    background-position: 5px 6px;
+    opacity: 0;
 }
 
 .todo.completed .todo-checkbox-wrapper::after {
@@ -154,7 +154,7 @@ ul {
     top: 0; right: 0; bottom: 0; left: 0;
     height: 30px;
     width: 30px;
-    margin: auto;
+    margin: auto 0;
     opacity: 0;
     z-index: 1;
 }
@@ -208,13 +208,10 @@ ul {
 
 .filters-wrapper {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
-    max-width: 200px;
+    top: 0; right: 0; bottom: 0; left: 0;
     height: 30px;
+    max-width: 200px;
+    margin: auto;
 }
 
 .filters {
@@ -255,7 +252,6 @@ ul {
     color: #777;
     font-size: 100%;
     font-weight: 300;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     border: none;
     outline: none;
 }
@@ -263,7 +259,8 @@ ul {
 input.edit-field {
     width: 100%;
     height: 100%;
-    min-height: 60px;
+    min-height: 53px;
+    padding: 0 10px;
 }
 
 .todo.edit-off .edit-field {
@@ -279,9 +276,9 @@ input.edit-field {
 }
 
 .todo-name {
-    width: 100%;
     height: 100%;
-    padding: 12px 12px 12px 0;
+    width: 100%;
+    padding: 12px 14px 12px 14px;
     word-break: break-all;
 }
 
@@ -291,6 +288,12 @@ input.edit-field {
 
 .todo.edit-off .todo-name {
     display: inline-block;
+}
+
+.todo.edit-on .checkbox,
+.todo.edit-on .todo-checkbox-wrapper::before,
+.todo.edit-on .todo-checkbox-wrapper::after {
+    display: none;
 }
 
 @media only screen and (max-width: 480px) {
