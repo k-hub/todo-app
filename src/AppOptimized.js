@@ -15,17 +15,8 @@ class App extends Component {
   }
 
   /**
-   * Load previous saved state in sessionStorage
+   * Load previous saved state in sessionStorage.
    */
-  // hydrateState() {
-  //   for (let key in this.state) {
-  //     if (sessionStorage.hasOwnProperty(key)) {
-  //       let value = sessionStorage.getItem(key) || this.state[key];
-  //       value = JSON.parse(value);
-  //       this.setState({[key]: value});
-  //     }
-  //   }
-  // }
   hydrateState() {
     for (let key in this.state) {
       if (sessionStorage.hasOwnProperty(key)) {
@@ -36,16 +27,8 @@ class App extends Component {
     }
   }
   /**
-   * Save current state to sessionStorage
+   * Save current state to sessionStorage.
    */
-  // saveStateToSessionStorage() {
-  //   for (let key in this.state) {
-  //     if (!keysToIgnore.includes(key)) {
-  //       sessionStorage.setItem(key, JSON.stringify(this.state[key]))
-  //     }
-  //   }
-  // }
-  //
   saveStateToSessionStorage() {
     for (let key in this.state) {
       if (!keysToIgnore.includes(key)) {
@@ -55,7 +38,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-     // this.hydrateState(); // TODO: UNCOMMENT THIS WHEN COMPLETE
+     // this.hydrateState();
 
      window.addEventListener(
        'beforeunload',
@@ -76,7 +59,7 @@ class App extends Component {
   /**
    * Accepts a boolean to determine if all todos should be marked complete or not.
    * @param  {Boolean} isToggleOn Boolean
-   * @return {[type]}             Updated todos that will be marked/unmarked completed
+   * @return {[type]}             Todos will be marked/unmarked completed
    */
   handleToggleAll = (isToggleAllOn) => {
     this.setState(prevState => {
@@ -91,7 +74,7 @@ class App extends Component {
 
   /**
    * Validate todo input field and create todo if valid.
-   * @param  {[type]} e input key event
+   * @param  {[type]} e keydown event
    */
   _handleKeyDown = (e) => {
     if (e.key === 'Enter' && this.state.inputValue.length > 0) {
@@ -126,7 +109,7 @@ class App extends Component {
     return Math.random().toString(36).substring(2);
   }
 
-  // TODO: WORK ON VERIFYING RANDOM ID DOES NOT EXIST IN MAP
+  // TODO: KM - Add method to verify if ID is unique and not already in use.
   _verifyIdIsUnique(map, id) {
     return map.get(id) ? false : true;
   }
@@ -139,7 +122,11 @@ class App extends Component {
       const todosMapCopy = new Map(prevState.todos);
 
       let todoID = this._generateID();
-      todosMapCopy.set(todoID, {todo: this.state.inputValue, completed: false, editing: false})
+      todosMapCopy.set(todoID, {
+        todo: this.state.inputValue,
+        completed: false,
+        editing: false
+      })
 
       return {
         todos: todosMapCopy
@@ -164,7 +151,7 @@ class App extends Component {
 
   /**
    * Update a todo's completed state.
-   * @param  {[type]} e     Check/uncheck checkbox
+   * @param  {[type]} e     Check/uncheck checkbox event
    * @param  {[type]} id    ID of checked todo
    */
   handleCheckBoxChange = (e, id) => {
@@ -199,9 +186,16 @@ class App extends Component {
 
   _handleFilterSelection = (e) => {
     const selectedFilter = e.target.dataset.filter;
-    this.setState({nowShowing: selectedFilter });
+    this.setState({nowShowing: selectedFilter});
   }
 
+  /**
+   * Create array with todo IDs to reflect the selected filter.
+   * 'all' -> array of all todo IDs
+   * 'active' -> array of todo IDs that are not marked completed
+   * 'completed' -> array of todo IDs that are marked completed
+   * @return {[arr]} Array of todo IDs
+   */
   changeTodosView() {
     const copyTodosMap = new Map(this.state.todos);
     const copyTodosIds = [...copyTodosMap.keys()];
@@ -224,6 +218,12 @@ class App extends Component {
     }
   }
 
+  /**
+   * Set editing state to true when the user double clicks on a todo item.
+   * Immediately set the cursor to the end of the input edit field.
+   * @param  {[e]}  e  doubleclick event
+   * @param  {[str]}  id todo ID
+   */
   isEditMode = (e, id) => {
     this.setState(prevState => {
       const todosMapCopy = new Map(prevState.todos);
@@ -247,6 +247,12 @@ class App extends Component {
     })
   }
 
+  /**
+   * Submit edited todo on 'enter' key down event and set edit mode to false to close
+   * the input field view.
+   * @param  {[e]} e  key down event
+   * @param  {[str]} id todo ID
+   */
   _handleKeyDownInputEdit = (e, id) => {
     if (e.key === 'Enter') {
       this.setState(prevState => {
@@ -260,6 +266,14 @@ class App extends Component {
     }
   }
 
+  /**
+   * User can submit an edited todo by unfocusing on the input edit field
+   * or a user can close the input edit field by unfocusing the todo item. Set
+   * edit mode to false to close the input field view.
+   * @param  {[type]} e  [description]
+   * @param  {[type]} id [description]
+   * @return {[type]}    [description]
+   */
   _handleBlurInputEdit = (e, id) => {
     this.setState(prevState => {
       const todosMapCopy = new Map(prevState.todos);
@@ -286,7 +300,7 @@ class App extends Component {
         <header>todos</header>
         <div className="todos-wrapper">
         <div className="todos-container">
-          {/* INPUT FIELD */}
+          {/* INPUT FIELD FOR TODO CREATION */}
           <div className="wrapper-input-field">
             <Toggle
               onClick={this.handleToggleAll}
