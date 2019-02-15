@@ -165,7 +165,7 @@ ul {
 }
 
 .todo:hover .remove {
-    display:inline-block;
+    display: inline-block;
     position: absolute;
     bottom: 11px;
     right: 14px;
@@ -304,5 +304,13 @@ input.edit-field {
     .filters-wrapper {
         top: inherit;
         bottom: 10px;
+    }
+
+    .remove {
+        display: inline-block;
+        position: absolute;
+        bottom: 11px;
+        right: 14px;
+        color: #af5b5e;
     }
 }
